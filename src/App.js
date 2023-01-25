@@ -1,24 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useEffect } from "react";
+import productData from "./data/productData";
+import { setData } from "./redux/slices/dataSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { isEmpty } from "lodash";
+import { Layout } from "./components/Layout";
+import { SubHeader } from "./components/SubHeader";
+import { Header } from "./components/Header";
+import { Content } from "./components/Content";
 
 function App() {
+  const dataState = useSelector((state) => state.dataState);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (isEmpty(dataState.data)) {
+      dispatch(setData(productData));
+    }
+    return () => {
+      localStorage.removeItem("productData");
+    };
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout>
+      <Header />
+      <SubHeader />
+      <Content />
+    </Layout>
   );
 }
 
